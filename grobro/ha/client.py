@@ -40,6 +40,7 @@ except ValueError:
     MAX_BAT = MAX_BAT_RAW
 FILTER_DATA_GLITCHES = os.getenv("FILTER_DATA_GLITCHES", "False").lower() == "true"
 KEEP_BATTERY_POSITION = os.getenv("KEEP_BATTERY_POSITION", "False").lower() == "true"
+REPUBLISH_DISCOVERY_ON_RECONNECT = os.getenv("REPUBLISH_DISCOVERY_ON_RECONNECT", "False").lower() == "true"
 LOG = logging.getLogger(__name__)
 
 _MAX_BAT_CACHE: dict[str, int] = {}
@@ -376,6 +377,10 @@ class Client:
 
     def __on_connect(self, client, userdata, flags, reason_code, properties):
         LOG.debug(f"Connected to HA MQTT server with result code {reason_code}")
+        if REPUBLISH_DISCOVERY_ON_RECONNECT:
+            LOG.info("Clearing discovery cache on reconnect to force republication")
+            self._discovery_payload_cache.clear()
+            self._discovery_cache.clear()
 
     def __on_message(self, client, userdata, msg: mqtt.MQTTMessage):
         parts = msg.topic.removeprefix(f"{HA_BASE_TOPIC}/").split("/")
