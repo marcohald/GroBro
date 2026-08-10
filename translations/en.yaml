@@ -71,3 +71,6 @@ configuration:
   KEEP_BATTERY_POSITION:
     name: KEEP_BATTERY_POSITION
     description: When enabled, GroBro tracks NOAH battery serial numbers across position changes and logs a warning if a battery moves to a different slot. Default is false.
+  REPUBLISH_DISCOVERY_EVERYTIME:
+    name: REPUBLISH_DISCOVERY_EVERYTIME
+    description: When enabled, GroBro republishes the discovery message everytime instead of only when it changes. Default is false.
