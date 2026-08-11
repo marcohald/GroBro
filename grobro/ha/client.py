@@ -796,7 +796,10 @@ class Client:
 
         payload_str = json.dumps(payload, sort_keys=True, separators=(",", ":"))
 
-        if not REPUBLISH_DISCOVERY_EVERYTIME and self._discovery_payload_cache.get(device_id) == payload_str:
+        old_payload = self._discovery_payload_cache.get(device_id)
+        payload_changed = old_payload != payload_str
+
+        if not REPUBLISH_DISCOVERY_EVERYTIME and not payload_changed:
             LOG.debug("Discovery unchanged for %s, skipping", device_id)
             if device_id not in self._discovery_cache:
                 self._discovery_cache.append(device_id)
@@ -807,7 +810,8 @@ class Client:
             return
 
         LOG.info("Publishing updated discovery for %s", device_id)
-        self._client.publish(topic, "", retain=True)  # force HA to refresh
+        if payload_changed and old_payload is not None:
+            self._client.publish(topic, "", retain=True)  # force HA to refresh on actual changes
         self._client.publish(topic, payload_str, retain=True)
         self._discovery_payload_cache[device_id] = payload_str
         if device_id not in self._discovery_cache:
