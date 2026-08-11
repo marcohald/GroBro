@@ -71,3 +71,6 @@ configuration:
   KEEP_BATTERY_POSITION:
     name: KEEP_BATTERY_POSITION
     description: Wenn aktiviert, überwacht GroBro die Seriennummern der NOAH-Batterien über Positionswechsel und protokolliert eine Warnung, wenn eine Batterie in einen anderen Steckplatz wechselt. Standard ist deaktiviert.
+  REPUBLISH_DISCOVERY_EVERYTIME:
+    name: REPUBLISH_DISCOVERY_EVERYTIME
+    description: Wenn aktiviert, veröffentlicht GroBro die Discovery-Nachricht jedes Mal neu, anstatt nur bei Änderungen. Standard ist deaktiviert.

@@ -41,6 +41,7 @@ except ValueError:
 FILTER_DATA_GLITCHES = os.getenv("FILTER_DATA_GLITCHES", "False").lower() == "true"
 KEEP_BATTERY_POSITION = os.getenv("KEEP_BATTERY_POSITION", "False").lower() == "true"
 REPUBLISH_DISCOVERY_ON_RECONNECT = os.getenv("REPUBLISH_DISCOVERY_ON_RECONNECT", "False").lower() == "true"
+REPUBLISH_DISCOVERY_EVERYTIME = os.getenv("REPUBLISH_DISCOVERY_EVERYTIME", "False").lower() == "true"
 LOG = logging.getLogger(__name__)
 
 _MAX_BAT_CACHE: dict[str, int] = {}
@@ -795,7 +796,7 @@ class Client:
 
         payload_str = json.dumps(payload, sort_keys=True, separators=(",", ":"))
 
-        if self._discovery_payload_cache.get(device_id) == payload_str:
+        if not REPUBLISH_DISCOVERY_EVERYTIME and self._discovery_payload_cache.get(device_id) == payload_str:
             LOG.debug("Discovery unchanged for %s, skipping", device_id)
             if device_id not in self._discovery_cache:
                 self._discovery_cache.append(device_id)
